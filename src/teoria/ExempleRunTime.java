@@ -6,7 +6,7 @@ public class ExempleRunTime {
 //        Runtime run = Runtime.getRuntime();
 //        Process p = run.exec("code /c start bash /k echo Hola");
 
-        ProcessBuilder pd = new  ProcessBuilder("notepad");
+        ProcessBuilder pd = new  ProcessBuilder("notepad.exe");
         Process p = pd.start();
         int codeRetorn = p.waitFor();
 
