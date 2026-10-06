@@ -1,37 +1,61 @@
 package exercicis;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.*;
 
 public class ExecutaPing {
 
     public static void main(String[] args) {
 
-        // Comprobem que s'introdueix la comanda al iniciar.
-        if (args.length <= 0) {
-            System.out.println("Falta indicar la comanda a executar.");
-
-            System.exit(1);
+        // Comprovar que s'ha indicat almenys el nom de l'ordinador
+        if (args.length < 1) {
+            System.out.println("Ús: java ExecutaPing <ordinador> [nombre_de_vegades]");
+            return;
         }
 
-        // Creem el ProcessBuilder.
-        ProcessBuilder pb = new ProcessBuilder(args); // Li pasem el args.
-        pb.inheritIO();
+        // Arguments per a la comanda ping
+        String ordinador = args[0];
+        int vegades = 5; // Valor per defecte de ping de Windows
 
-        // Feim un control de error (try-catch).
+        // Si s'ha indicat el nombre de vegades
+        if (args.length >= 2) {
+            try {
+                vegades = Integer.parseInt(args[1]);
+
+                if (vegades <= 0) {
+                    System.out.println("El nombre de vegades ha de ser un nombre positiu.");
+                    return;
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("El nombre de vegades ha de ser un enter.");
+                return;
+            }
+        }
+
         try {
-            // Declarem el Process amb un start(), pel codi.
-            Process p = pb.start();
-            int codRet = p.waitFor();
+            // Cada element és un argument independent de ProcessBuilder
+            ProcessBuilder pb = new ProcessBuilder(
+                    "ping",
+                    "-n",
+                    String.valueOf(vegades),
+                    ordinador
+            );
 
-            // Mostrem l'estat del codRet per consola.
-            System.out.println("L'execució de " + Arrays.toString(args)
-                + " retorna " + codRet + " " + (codRet==0? "(execució correcte)" :
-                    "(ERROR)"));
+            // Llançar el procés
+            Process p = pb.inheritIO().start();
 
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            // Esperar que acabi
+            int codiRetorn = p.waitFor();
+
+            // Mostrar el codi de retorn
+            System.out.println("Codi de retorn: " + codiRetorn);
+
+        } catch (IOException e) {
+            System.out.println("Error en executar la comanda ping: " + e.getMessage());
+
+        } catch (InterruptedException e) {
+            System.out.println("El procés ha estat interromput.");
+            Thread.currentThread().interrupt();
         }
-
     }
 }
