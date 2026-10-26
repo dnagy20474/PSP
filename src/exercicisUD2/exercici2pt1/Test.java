@@ -1,67 +1,94 @@
 package exercicisUD2.exercici2pt1;
 
-import java.util.*;
+import java.util.Random;
 
 public class Test {
 
-    void main() {
-        // Creem un Thread.
+    public static void main(String[] args) {
+
+        // Creem els 4 Threads de les tasques.
         Thread t1 = new Thread(new Tasca("Descàrrega"));
-        Thread t2 = new Thread(new Tasca("Cálcul"));
-        Thread t3 = new Thread(new Tasca("Copia"));
-        Thread t4 = new Thread(new Tasca("Anàlisis"));
+        Thread t2 = new Thread(new Tasca("Càlcul"));
+        Thread t3 = new Thread(new Tasca("Còpia"));
+        Thread t4 = new Thread(new Tasca("Anàlisi"));
 
+        // Iniciem les 4 tasques.
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        // Esperam que acabin les 4 tasques.
         try {
-            // Iniciem les tasques.
-            t1.start();
-            System.out.println("Tasca Descàrrega iniciada.");
-            t2.start();
-            System.out.println("Tasca Cálcul iniciada.");
-            t3.start();
-            System.out.println("Tasca Copia iniciada.");
-            t4.start();
-            System.out.println("Tasca Anàlisis iniciada." + "\n");
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
 
-            // Feiem els joins per cada tasca.
-            try {
-                t1.join();
-                t2.join();
-                t3.join();
-                t4.join();
-            } catch (InterruptedException e) {
-                System.out.println("ERROR: " + e);
-            }
-
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             System.out.println("ERROR: " + e);
+            Thread.currentThread().interrupt();
         }
+
+        // Les 4 tasques ja han acabat.
+        // Ara podem iniciar la tasca Informe.
+        Thread t5 = new Thread(new Tasca("Informe"));
+
+        t5.start();
+
+        // Esperam que acabi l'Informe.
+        try {
+            t5.join();
+
+        } catch (InterruptedException e) {
+            System.out.println("ERROR: " + e);
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Totes les tasques han acabat.");
     }
 
-    class Tasca implements Runnable {
+
+    static class Tasca implements Runnable {
+
         private String nom;
 
-        Tasca (String nom) {
+        Tasca(String nom) {
             this.nom = nom;
         }
 
-        // Mètode implementat de la interfície Runnable.
         @Override
         public void run() {
-            // Declarem el random per a generar pauses aleatòries.
+
             Random r = new Random();
 
-            // Feiem 5 iteracions.
-            for (int i = 0; i < 5; i++) {
-                // Variable per a guardar la pausa.
-                int pausa = 1 + r.nextInt(500-100);
-                System.out.println("Tasca " + i + ": pas " + pausa);
+            System.out.println("Tasca " + nom + " iniciada.");
+
+            // Feim 5 iteracions.
+            for (int i = 1; i <= 5; i++) {
+
+                System.out.println(
+                        "Tasca " + nom + ": pas " + i + "/5"
+                );
+
+                // Pausa aleatòria entre 100 i 500 ms.
+                int pausa = 100 + r.nextInt(401);
+
                 try {
                     Thread.sleep(pausa);
-                    System.out.println("Tasca " + i + ": pas acabat");
+
+                    System.out.println(
+                            "Tasca " + nom + ": pas " + i + " acabat."
+                    );
+
                 } catch (InterruptedException e) {
                     System.out.println("ERROR: " + e);
+                    Thread.currentThread().interrupt();
+                    return;
                 }
             }
+
+            System.out.println("Tasca " + nom + " acabada.");
         }
     }
 }
