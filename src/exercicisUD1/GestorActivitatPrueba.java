@@ -1,4 +1,4 @@
-package exercicis;
+package exercicisUD1;
 
 import java.io.*;
 

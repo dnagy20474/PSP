@@ -1,4 +1,4 @@
-package exercicis.exercici1pt8;
+package exercicisUD1.exercici1pt8;
 
 import java.io.*;
 
