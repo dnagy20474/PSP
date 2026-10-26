@@ -1,6 +1,5 @@
-package exercicisUD2;
+package exercicisUD2.exercici2pt1;
 
-import java.io.*;
 import java.util.*;
 
 public class Tasca implements Runnable {
@@ -27,10 +26,10 @@ public class Tasca implements Runnable {
         }
     }
 
-    // Mètode implementat de la interface Runnable.
+    // Mètode implementat de la interfície Runnable.
     @Override
     public void run() {
-        // Declarem el random per a generar pauses aleatóries.
+        // Declarem el random per a generar pauses aleatòries.
         Random r = new Random();
 
         // Feiem 5 iteracions.
