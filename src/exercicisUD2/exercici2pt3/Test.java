@@ -10,12 +10,17 @@ public class Test {
     public static void main(String[] args) {
 
 
+    }
+
+    // Mètode per poder sincronitzar cada fil, per no perdre cap.
+    public synchronized void registrarAcces() {
 
     }
 
+    // Clase per al control d'accessos.
     class ControlAcces implements Runnable {
 
-        // Declarem 2 HashMaps.
+        // Declarem 2 HashMaps. Un per accés a porta i un altre per tipo.
         HashMap<Integer, Integer> map1 = new HashMap<>();
         HashMap<Integer, Integer> map2 = new HashMap<>();
 
