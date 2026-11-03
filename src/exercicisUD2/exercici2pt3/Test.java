@@ -1,39 +1,34 @@
 package exercicisUD2.exercici2pt3;
 
-import java.util.*;
-
 public class Test {
-
-    // Atribut de portes de entrada.
-    public static final int NUM_PORTES_ENTRADA = 10;
 
     public static void main(String[] args) {
 
+        // Totes les portes utilitzen el mateix objecte
+        ControlAcces control = new ControlAcces();
 
-    }
+        Porta[] portes = new Porta[10];
 
-    // Mètode per poder sincronitzar cada fil, per no perdre cap.
-    public synchronized void registrarAcces() {
+        // Creem les 10 portes
+        for (int i = 0; i < 10; i++) {
+            portes[i] = new Porta(i + 1, control);
+        }
 
-    }
+        // Comencem els fils
+        for (int i = 0; i < 10; i++) {
+            portes[i].start();
+        }
 
-    // Clase per al control d'accessos.
-    class ControlAcces implements Runnable {
-
-        // Declarem 2 HashMaps. Un per accés a porta i un altre per tipo.
-        HashMap<Integer, Integer> map1 = new HashMap<>();
-        HashMap<Integer, Integer> map2 = new HashMap<>();
-
-        // Declarem el Random.
-        Random r = new Random();
-
-        // Implantació del métode run() de la interface Runnable
-        @Override
-        public void run() {
-            // Generem aleatoriamente els accesos.
-            for (int i = 1; i <= NUM_PORTES_ENTRADA; i++) {
-
+        // Esperem que acabin tots els fils
+        for (int i = 0; i < 10; i++) {
+            try {
+                portes[i].join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
+
+        // Quan han acabat tots, mostrem els resultats
+        control.mostrarResultats();
     }
 }
