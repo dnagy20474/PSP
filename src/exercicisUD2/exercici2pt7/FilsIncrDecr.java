@@ -28,38 +28,67 @@ public class FilsIncrDecr {
 }
 class Comptador {
     private int compta = 0;
-    Comptador(int valorInicial){
+    private final int MAXIM = 100; // Variable per al máxim, l'inicialitzem a 100 per exemple.
+
+    Comptador(int valorInicial) {
         this.compta = valorInicial;
     }
-    synchronized public int getCompta(){
-        return compta;
-    }
-    synchronized public int incrementa(){
-        this.compta++;
 
+    synchronized public int getCompta() {
         return compta;
     }
-    synchronized public int decrementa(){
+
+    synchronized public int incrementa() {
+        this.compta++;
+        return compta;
+    }
+
+    synchronized public int decrementa() {
         this.compta--;
         return compta;
     }
+
+    // Mètode per a agafar el máxim.
+    public int getMaxim() {
+        return MAXIM;
+    }
 }
+
 class FilIncr implements Runnable {
     private final String id;
     private final Comptador compt;
-    FilIncr(String id, Comptador c){
+
+    FilIncr(String id, Comptador c) {
         this.id = id;
         this.compt = c;
     }
+
     @Override
     public void run() {
         while (true) {
             synchronized (this.compt) {
-                this.compt.incrementa();
-                this.compt.notify();
 
-                System.out.printf("Fil %s incrementa, valor comptador: %d\n",
-                        this.id, this.compt.getCompta());
+                while (this.compt.getCompta() >= this.compt.getMaxim()) {
+                    System.out.printf(
+                            "!!! El fil %s no puede incrementar, valor: %d\n",
+                            this.id, this.compt.getCompta()
+                    );
+
+                    try {
+                        this.compt.wait();
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+
+                this.compt.incrementa();
+                this.compt.notifyAll();
+
+                System.out.printf(
+                        "Fil %s incrementa, valor contador: %d\n",
+                        this.id, this.compt.getCompta()
+                );
             }
         }
     }
@@ -76,9 +105,9 @@ class FilDecr implements Runnable {
 
     @Override
     public void run() {
-        while (true){
-            synchronized (this.compt){
-                while (this.compt.getCompta()<1) {
+        while (true) {
+            synchronized (this.compt) {
+                while (this.compt.getCompta() < 1) {
 
                     System.out.printf("!!! El fil %s no es pot decrementar, " +
                                     "valor comptador: %d\n", this.id, this.compt.getCompta());
@@ -89,6 +118,7 @@ class FilDecr implements Runnable {
                     }
                 }
                 this.compt.decrementa();
+                this.compt.notifyAll();
 
                 System.out.printf("Fil %s decrementa, valor comptador: %d\n",
                         this.id, this.compt.getCompta());
