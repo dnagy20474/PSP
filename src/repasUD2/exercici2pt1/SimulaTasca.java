@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SimulaTasca {
 
-    static void main(String[] args) throws InterruptedException {
+    void main(String[] args) throws InterruptedException {
 
         // Array de fils.
         Thread[] fils = new Thread[]{
@@ -21,8 +21,8 @@ public class SimulaTasca {
         fils[3].start();
 
         // Mostrem els missatges de inci.
-        for (int i = 4; i < fils.length; i++) {
-            System.out.printf("Tasca %s iniciada. %n%n", fils[i].getName());
+        for (int i = 0; i < fils.length; i++) {
+            System.out.printf("Tasca %s iniciada. %n%n", i);
 
         }
 
@@ -61,15 +61,15 @@ public class SimulaTasca {
 
                 // Control d'error perquè no peti el programa.
                 try {
+                    // Aquest mètode serveix per a fer l'espera de les pauses, quan toqui.
+                    Thread.sleep(pausa);
+
                     // Mostrem la tasca i el pas amb printf
                     System.out.printf("Tasca %s: pas %s/%s %n%n", this.nombre, pausa, i);
                     System.out.printf("Tasca %s: pas %s acabat. %n%n", this.nombre, pausa);
                     System.out.println();
 
-                    // Aquest mètode serveix per a fer l'espera de les pauses, quan toqui.
-                    Thread.sleep(pausa);
-
-                    System.out.printf("Tasca %s: ha acabat %n%n", Thread.currentThread().getName());
+                    System.out.printf("Tasca %s: ha acabat %n%n", this.nombre);
 
                 } catch (InterruptedException ie) {
                     System.out.printf("[ERROR]: %s", ie);
