@@ -4,35 +4,25 @@ import java.util.*;
 
 public class SimulaTasca {
 
-    void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
 
-        // Array de fils.
-        Thread[] fils = new Thread[]{
-                new Thread(new Tasca("Descàrrega")),
-                new Thread(new Tasca("Càlcul")),
-                new Thread(new Tasca("Còpia")),
-                new Thread(new Tasca("Anàlisi"))
-        };
+        // Declaramos los hilos y ponemos el nombre, grácias a la clase Tasca.
+        Thread t1 =  new Thread(new Tasca("Descàrrega"));
+        Thread t2 =  new Thread(new Tasca("Càlcul"));
+        Thread t3 =  new Thread(new Tasca("Còpia"));
+        Thread t4 =  new Thread(new Tasca("Anàlisi"));
 
-        // Començem els fils.
-        fils[0].start();
-        fils[1].start();
-        fils[2].start();
-        fils[3].start();
-
-        // Mostrem els missatges de inci.
-        for (int i = 0; i < fils.length; i++) {
-            System.out.printf("Tasca %s iniciada. %n%n", i);
-
-        }
-
-        System.out.println(); // Salt de lìnea.
+        // Iniciamos los hilos.
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
 
         // Feim els 4 joins.
-        fils[0].join();
-        fils[1].join();
-        fils[2].join();
-        fils[3].join();
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
 
         System.out.println("Totes les tasques han acabat.");
 
@@ -53,11 +43,13 @@ public class SimulaTasca {
         @Override
         public void run() {
 
-            // Declarem la variable pausa per guardar les pauses aleatòries.
-            int pausa = r.nextInt(401) + 100; // r.nextInt(); aquest mètode serveix per calcular de 100 a 500 ms de pausa.
+            System.out.printf("Tasca %s iniciada %n", this.nombre);
 
             // Iteracions i pauses.
-            for (int i = 0; i < 5; i++) {
+            for (int i = 1; i <= 5; i++) {
+
+                // Declarem la variable pausa per guardar les pauses aleatòries.
+                int pausa = r.nextInt(401) + 100; // r.nextInt(); aquest mètode serveix per calcular de 100 a 500 ms de pausa.
 
                 // Control d'error perquè no peti el programa.
                 try {
@@ -65,16 +57,18 @@ public class SimulaTasca {
                     Thread.sleep(pausa);
 
                     // Mostrem la tasca i el pas amb printf
-                    System.out.printf("Tasca %s: pas %s/%s %n%n", this.nombre, pausa, i);
-                    System.out.printf("Tasca %s: pas %s acabat. %n%n", this.nombre, pausa);
-                    System.out.println();
-
-                    System.out.printf("Tasca %s: ha acabat %n%n", this.nombre);
+                    System.out.printf("Tasca %s: pas %s/5 %n%n", this.nombre, i);
+                    System.out.printf("Tasca %s: pas %s acabat. %n%n", this.nombre, i);
 
                 } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt(); // Interumpe el bucle.
                     System.out.printf("[ERROR]: %s", ie);
+
+                    return;
                 }
             }
+
+            System.out.printf("Tasca %s: ha acabat %n%n", this.nombre);
         }
     }
 }
