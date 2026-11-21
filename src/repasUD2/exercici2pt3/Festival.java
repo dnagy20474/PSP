@@ -10,22 +10,47 @@ public class Festival {
 
     }
 
-    public static class ControlAcces implements Runnable {
+    public static class ControlAcces {
 
         private int portesEntrada = 10;
 
+        HashMap<Integer, Integer> accesPerPorta;
+        HashMap<String, Integer> tipusEntrada;
 
-        HashMap<Object, Object> nombreAcces = new HashMap<>();
-        HashMap<Object, Object> tipusEntrada = new HashMap<>();
+        public ControlAcces() {
+            accesPerPorta = new HashMap<>();
+            tipusEntrada = new HashMap<>();
+        }
 
-        @Override
-        public void run() {
+        synchronized public void registrarAccesPorta(int puerta) {
+            int contador = accesPerPorta.getOrDefault(puerta, 0);
+            accesPerPorta.put(puerta, contador + 1);
+        }
 
-            synchronized (nombreAcces) {
+        synchronized public void registrarTipusEntrada(String tipus) {
+            int contador = tipusEntrada.getOrDefault(tipus, 0);
+            tipusEntrada.put(tipus, contador + 1);
+        }
 
-            } synchronized (tipusEntrada) {
-
+        synchronized public void mostrarAccesPorta() {
+            for (Integer porta : accesPerPorta.keySet()) {
+                System.out.println("Porta: " + porta + ": " + accesPerPorta.get(porta));
             }
+        }
+
+        synchronized public void mostrarTipusEntrada() {
+            for (String tipus : tipusEntrada.keySet()) {
+                System.out.println(tipus + ": " + tipusEntrada.get(tipus));
+            }
+        }
+    }
+
+    public class Porta extends Thread {
+        private int numPorta;
+        private ControlAcces control;
+
+        public Porta(int numPorta, ControlAcces control) {
+
         }
     }
 }
