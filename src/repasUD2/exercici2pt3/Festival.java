@@ -50,6 +50,23 @@ public class Festival {
         private ControlAcces control;
 
         public Porta(int numPorta, ControlAcces control) {
+            this.numPorta = numPorta;
+            this.control = control;
+        }
+
+        @Override
+        public void run() {
+            Random r = new  Random();
+
+            int numAccesos = r.nextInt(101) + 100;
+            int tipu = r.nextInt(4);
+            
+            String tipus;
+
+            switch (tipu) {
+                case 0 -> tipus = "GENERAL";
+                case 1 -> tipus = "VIP";
+            }
 
         }
     }
