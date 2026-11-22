@@ -5,14 +5,34 @@ import java.util.*;
 public class Festival {
 
     static void main(String[] args) {
+        ControlAcces control = new ControlAcces();
 
+        Porta[] portes = new Porta[10];
 
+        for (int i = 0; i < 10; i++) {
+            portes[i] = new Porta(i + 1, control);
+        }
 
+        for (int i = 0; i < 10; i++) {
+            portes[i].start();
+        }
+
+        try {
+            for (int i = 0; i < 10; i++) {
+                portes[i].join();
+            }
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            System.out.println("eror. " + ie);
+
+            return;
+        }
+        System.out.println("RESULTATS FINALS");
+        control.mostrarAccesPorta();
+        control.mostrarTipusEntrada();
     }
 
     public static class ControlAcces {
-
-        private int portesEntrada = 10;
 
         HashMap<Integer, Integer> accesPerPorta;
         HashMap<String, Integer> tipusEntrada;
@@ -45,7 +65,7 @@ public class Festival {
         }
     }
 
-    public class Porta extends Thread {
+    public static class Porta extends Thread {
         private int numPorta;
         private ControlAcces control;
 
@@ -56,18 +76,30 @@ public class Festival {
 
         @Override
         public void run() {
-            Random r = new  Random();
+            Random r = new Random();
 
             int numAccesos = r.nextInt(101) + 100;
-            int tipu = r.nextInt(4);
-            
-            String tipus;
 
-            switch (tipu) {
-                case 0 -> tipus = "GENERAL";
-                case 1 -> tipus = "VIP";
+            for (int i = 0; i < numAccesos; i++) {
+
+                int tipu = r.nextInt(4);
+
+                String tipus;
+
+                switch (tipu) {
+                    case 0 -> tipus = "GENERAL";
+                    case 1 -> tipus = "VIP";
+                    case 2 -> tipus = "PRENSA";
+                    default -> tipus = null;
+                }
+
+
+                control.registrarAccesPorta(numPorta);
+                control.registrarTipusEntrada(tipus);
             }
 
+            System.out.println("Porta " + numPorta + " ha acabat. Accesos: "
+            + numAccesos);
         }
     }
 }
