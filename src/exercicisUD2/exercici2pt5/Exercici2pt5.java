@@ -64,11 +64,13 @@ public class Exercici2pt5 {
             // Control d'errors: sleep() pot llançar una InterruptedException.
             try {
 
+                int a;
+                int b;
+
                 // for que es repeteix per cada alumne.
                 for (int i = 0; i <= 5; i++) {
                     // Triem el primer llibre a l'atzar.
-                    int a = r.nextInt(llibres.length);
-                    int b;
+                    a = r.nextInt(llibres.length);
 
                     // Fem un do-while perquè el segon llibre sigui diferent del primer.
                     do {
